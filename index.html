@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organización sin Fines de Lucro</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <h1>Organización Sin Fines de Lucro</h1>
+            <p>Conecta, participa y genera un impacto positivo.</p>
+        </div>
+    </header>
+
+    <main class="container">
+        
+        <section id="donacion-online">
+            <h2>Realiza una Donación</h2>
+            <p>Tu contribución nos ayuda a llevar a cabo nuestros proyectos.</p>
+            <form id="formulario-donacion">
+                <label for="nombre">Nombre completo:</label>
+                <input type="text" id="nombre" name="nombre" required>
+
+                <label for="email">Correo electrónico:</label>
+                <input type="email" id="email" name="email" required>
+
+                <label for="monto">Monto ($):</label>
+                <input type="number" id="monto" name="monto" min="1" step="0.01" required>
+
+                <button type="submit">Donar</button>
+            </form>
+            <div id="resultado-donacion" class="resultado"></div>
+        </section>
+
+        <hr>
+
+        <section id="eventos">
+            <h2>Eventos de la Organización</h2>
+            <p>Descubre y participa en nuestros próximos eventos.</p>
+            <h3>Filtrar Eventos</h3>
+            <form id="filtro-eventos">
+                <label for="filtro-tipo">Tipo:</label>
+                <select id="filtro-tipo" name="tipo">
+                    <option value="">Todos</option>
+                    <option value="Taller">Taller</option>
+                    <option value="Charla">Charla</option>
+                    <option value="Recaudacion">Recaudación de Fondos</option>
+                    <option value="Voluntariado">Jornada de Voluntariado</option>
+                </select>
+
+                <label for="filtro-lugar">Lugar:</label>
+                <input type="text" id="filtro-lugar" name="lugar" placeholder="Ej. 'Santiago'">
+
+                <button type="submit">Filtrar</button>
+            </form>
+
+            <div id="lista-eventos" class="lista-eventos">
+                </div>
+        </section>
+
+        <hr>
+
+        <section id="registro-evento">
+            <h2>Registrar un Nuevo Evento</h2>
+            <p>Formulario para uso interno de la organización.</p>
+            <form action="procesar_registro_evento.php" method="POST">
+                <label for="descripcion">Descripción del Evento:</label>
+                <textarea id="descripcion" name="descripcion" rows="4" required></textarea>
+
+                <label for="tipo">Tipo de Evento:</label>
+                <select id="tipo" name="tipo" required>
+                    <option value="">Selecciona un tipo</option>
+                    <option value="Taller">Taller</option>
+                    <option value="Charla">Charla</option>
+                    <option value="Recaudacion">Recaudación de Fondos</option>
+                    <option value="Voluntariado">Jornada de Voluntariado</option>
+                    <option value="Otros">Otros</option>
+                </select>
+
+                <label for="lugar">Lugar:</label>
+                <input type="text" id="lugar" name="lugar" required>
+
+                <label for="fecha">Fecha:</label>
+                <input type="date" id="fecha" name="fecha" required>
+
+                <label for="hora">Hora:</label>
+                <input type="time" id="hora" name="hora" required>
+
+                <button type="submit">Registrar Evento</button>
+            </form>
+        </section>
+        
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Organización Sin Fines de Lucro. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('formulario-donacion').addEventListener('submit', function(event) {
+            event.preventDefault(); // Evita el envío tradicional del formulario
+
+            const form = event.target;
+            const formData = new FormData(form);
+            const resultadoDiv = document.getElementById('resultado-donacion');
+
+            fetch('donar.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                resultadoDiv.textContent = data.message;
+                resultadoDiv.style.color = data.success ? '#28a745' : '#dc3545';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                resultadoDiv.textContent = 'Hubo un error al procesar tu donación. Inténtalo de nuevo.';
+                resultadoDiv.style.color = '#dc3545';
+            });
+        });
+    </script>
+
+</body>
+</html>
